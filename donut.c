@@ -69,7 +69,6 @@ void render_donut(float A, float B){
             output[i][j] = ' ';
             z_buffer[i][j] = 0;
         }
-        
     }
 
     for (float theta = 0; theta < 2*M_PI; theta += theta_spacing)
@@ -99,11 +98,10 @@ void render_donut(float A, float B){
     printf("\x1b[H");
     for (int j = 0; j < screen_height; j++) {
         for (int i = 0; i < screen_width; i++) {
-            putchar(output[i,j]);
+            putchar(output[i][j]);
         }
         putchar('\n');
     }
     
     return;
 }
-
