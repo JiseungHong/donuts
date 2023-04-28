@@ -1,5 +1,5 @@
-#define screen_width 14
-#define screen_height 14
+#define screen_width 42
+#define screen_height 42
 
 #define R1 1.0
 #define R2 2.0
@@ -7,8 +7,8 @@
 #define K2 5.0
 #define K1 screen_width*K2*3/(8*(R1+R2))
 
-#define theta_spacing 0.07
-#define phi_spacing 0.02
+#define theta_spacing 0.01
+#define phi_spacing 0.01
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,7 +71,7 @@ void render_donut(float A, float B){
         }
     }
 
-    printf("\x1b[H");
+    // printf("\x1b[H");
     for (int j = 0; j < screen_height; j++) {
         for (int i = 0; i < screen_width; i++) {
             putchar(output[i][j]);
@@ -88,9 +88,8 @@ int main(){
     while (1)
     {   
         render_donut(rotating_angle, rotating_angle);
-        rotating_angle += M_PI/20;
+        rotating_angle += 0.015;
         rotating_angle = fmodf(rotating_angle, 2*M_PI);
-        usleep(10000);
     }
 
     return 0;
