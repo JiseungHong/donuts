@@ -1,11 +1,12 @@
 # donuts
 spinning all kinds of 3-dimensional objects in terminal.
+---
 
 
 ### donuts.c
 All descriptions are commented in _donuts.c_.
 
-'''
+''' linux
 gcc -o donut donut.c
 ./donut
 '''
