@@ -7,6 +7,7 @@ spinning all kinds of 3-dimensional objects in terminal.
 All descriptions are commented in _donuts.c_.
 
 >gcc -o donut donut.c
+>
 >./donut
 
 
