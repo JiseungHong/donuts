@@ -40,6 +40,20 @@ void render_donut(float A, float B){
         
     }
 
+    /* Matrix Multiplication.
+
+    1. float theta
+    'theta' is the angle used to construct a circle of radius R1 from the point (R2, 0, 0).
+    'theta' goes from 0 to 2*pi by interval of 'theta_spacing'. Be aware that the value of the interval affects the rotation speed.
+
+    2. float phi
+    'phi' is the angle used to construct a Torus(a.k.a. Donut) of radius R2 from the y-axis.
+    Since we are rotating a circle, we use a rotation matrix to obtain each coordinate of the Torus.
+
+    3. float A and float B
+    Last of all, A and B is a variable given by main function.
+    A and B indicates the rotation_angle of x-axis and z-axis respectively.
+    */
     float sin_A = sin(A), sin_B = sin(B), cos_A = cos(A), cos_B = cos(B);
     for (float theta = 0; theta < 2*M_PI; theta += theta_spacing)
     {
@@ -58,6 +72,18 @@ void render_donut(float A, float B){
             float y = dis_x*temp_y+dis_y*cos_B;
             float z = K2+cos_A*dis_x*sin_phi+temp_z;
 
+            /* Luminance of each coordinate.
+
+            Luminance is what makes the Torus 3-Dimensional.
+            Here, we lighted up surfaces facing behind and above the viewer: (0, 1, -1).
+            Thus we multiply the surface normal by (0, 1, -1), defining this value as 'float luminance'.
+            Based on luminance, we judged how bright each coordinate is.
+
+            Also, ooz(the reverse value of z) becomes a criterion for whether or not to draw each coordinate.
+            That's because the coordinate cannot be seen by the viewer when the z-value is smaller than another z-value which has the same (int) x-projected value and (int) y-projected value.
+            *PLEASE* Be aware of stack overflow(index out of range inside the if statement; segmentation fault would appear in Command Line Interface.)
+            If you define out-of-bound values for R1, R2, K2, etc., segmentation fault occurs. Refer to the document for details.
+            */
             float luminance = cos_phi*cos_theta*sin_B-cos_A*cos_theta*sin_phi-sin_A*sin_theta+cos_B*(cos_A*sin_theta-cos_theta*sin_A*sin_phi);
             int luminanceIndex = luminance * 8;
 
@@ -67,10 +93,16 @@ void render_donut(float A, float B){
             if (luminance>0 && ooz>z_buffer[projection_x][projection_y])
             {
                 output[projection_x][projection_y] = ".,-~:;=!*#$@"[luminanceIndex];
+                z_buffer[projection_x][projection_y] = ooz;
             }
         }
     }
 
+    /* Commenting out printf("\x1b[H");
+
+    I do not know well how printf("\x1b[H"); works, but this line holds the terminal within fixed size.
+    Eliminating this term and manually fixing the terminal size experimentally by screen_hight X screen_width was better.
+    */
     // printf("\x1b[H");
     for (int j = 0; j < screen_height; j++) {
         for (int i = 0; i < screen_width; i++) {
@@ -82,6 +114,15 @@ void render_donut(float A, float B){
     return;
 }
 
+/* int main(-NO ARGUMENTS-);
+
+Designed an infinite loop that rotates a donut within the interval of 'float rotating_angle'.
+Current design is to rotate the donut about x-axis and z-axis by both 'float rotating_angle'.
+(+ You can rotate by each axis differently by assigning each angle respectively.)
+
+The interval of the variable 'float rotating_angle' indicates how slow(or elaborate) the rotation would be by each axis.
+(+ Currently the interval is +0.015. Likewise, minus interval is available.)
+*/
 int main(){
     float rotating_angle = 0;
     
